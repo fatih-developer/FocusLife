@@ -14,7 +14,7 @@ Proje, Clean Architecture prensiplerine uygun olarak geliştirilmiştir ve aşa�
 
 ## Geliştirme Ortamı Gereksinimleri
 
-- .NET 8.0 SDK
+- .NET 9.0 SDK
 - Visual Studio 2022 veya daha yeni bir sürüm
 - SQL Server (LocalDB veya tam sürüm)
 
