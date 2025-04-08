@@ -40,35 +40,33 @@ public class ExceptionHandlingMiddleware
 
             var response = new Dictionary<string, object>();
 
-            switch (exception)
+            var statusCode = exception switch
             {
-                case ValidationException validationException:
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    response["error"] = new
-                    {
-                        message = "Girdiğiniz bilgilerde hatalar var",
-                        validationErrors = validationException.Errors
-                    };
-                    break;
+                FocusLifePlus.Application.Common.Exceptions.ValidationException => StatusCodes.Status400BadRequest,
+                NotFoundException => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status500InternalServerError
+            };
 
-                case NotFoundException notFoundException:
-                    context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    response["error"] = new
-                    {
-                        message = notFoundException.Message
-                    };
-                    break;
+            context.Response.StatusCode = statusCode;
 
-                default:
-                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    response["error"] = new
-                    {
-                        message = "İşleminiz gerçekleştirilirken bir hata oluştu.",
-                        details = exception.Message,
-                        stackTrace = exception.StackTrace
-                    };
-                    break;
-            }
+            response["error"] = exception switch
+            {
+                FocusLifePlus.Application.Common.Exceptions.ValidationException validationException => new
+                {
+                    message = "Girdiğiniz bilgilerde hatalar var",
+                    validationErrors = validationException.Errors
+                },
+                NotFoundException notFoundException => new
+                {
+                    message = notFoundException.Message
+                },
+                _ => new
+                {
+                    message = "İşleminiz gerçekleştirilirken bir hata oluştu.",
+                    details = exception.Message,
+                    stackTrace = exception.StackTrace
+                }
+            };
 
             var result = JsonSerializer.Serialize(response, new JsonSerializerOptions 
             { 
