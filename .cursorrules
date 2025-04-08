@@ -1,0 +1,114 @@
+PowerShell'de && operatörü çalışmıyor. Komutları ayrı ayrı çalıştıralım.
+proje klasör yapısını bozma.
+DependencyInjection class oluşturup durma. Zaten ApplicationServiceRegistration var.
+root altında src klasöründe .net backend projesi mevcut
+src altında FocusLifePlus.API FocusLifePlus.Application FocusLifePlus.Domain FocusLifePlus.Infrastructure FocusLifePlus.Shared projeleri olmalı
+docs klasöründe proje geneline hitap eden her türlü belge doküman yer alır.
+tests klasöründe katmanların test projeleri yer alır.
+root klasörümüz olan D:\Project\FocusLife+ altında hiçbir kodlama dosyası .cs .html .js vb.. olmamalı 
+root klasöründe .sln dosyası olmalı
+root altında /web /mobil gibi farklı platformlar için kodlama klasörleri olabilir.
+Kod geliştirirken, kesinlikle bu yapıya uygun klasörler ve dosyalar oluştur
+Alakasız veya bu yapıyla uyumsuz klasörler ve dosyalar oluşturmaktan kaçının
+Yeni dosyalar oluştururken, bu yapıdaki uygun konuma yerleştirdiğinizden emin olun.
+Eğer yeni bir modül veya özellik ekliyorsanız, bu yapıya uygun yeni alt klasörler oluşturabilirsin.
+
+Katmanlar için örnek klasör yapısı:
+[ProjeAnaDizini]/
+├── src/
+│   ├── [ProjeAdı].Domain/
+│   │   ├── Entities/
+│   │   ├── Interfaces/
+│   │   ├── Enums/
+│   │   ├── ValueObjects/
+│   │   └── Events/
+│   ├── [ProjeAdı].Application/
+│   │   ├── Common/
+│   │   │   ├── Interfaces/
+│   │   │   ├── Behaviors/
+│   │   │   ├── Exceptions/
+│   │   │   └── Mappings/
+│   │   ├── Features/
+│   │   │   └── [ÖzellikAdı]/
+│   │   │       ├── Commands/
+│   │   │       ├── Queries/
+│   │   │       └── DTOs/
+│   │   └── Contracts/ # Uygulama katmanı dışa bağımlılık arayüzleri (opsiyonel)
+│   ├── [ProjeAdı].Infrastructure/
+│   │   ├── Persistence/
+│   │   │   ├── DataContext.cs (veya DbContext)
+│   │   │   ├── Repositories/
+│   │   │   └── Migrations/
+│   │   ├── Services/ # Dış servislerle etkileşim (e-posta, dosya vb.)
+│   │   └── Configurations/
+│   └── [ProjeAdı].Api/
+│       ├── Controllers/
+│       ├── Models/ # API'ye özel istek/cevap modelleri
+│       ├── Middlewares/
+│       ├── Filters/
+│       ├── Extensions/
+│       └── Program.cs
+├── tests/
+│   ├── [ProjeAdı].Domain.Tests/
+│   ├── [ProjeAdı].Application.Tests/
+│   └── [ProjeAdı].Infrastructure.Tests/
+├── docs/
+├── deployments/
+├── artifacts/
+├── .gitignore
+├── README.md
+└── [diğer_proje_seviyesi_dosyaları]
+
+ Açıklamalar ve Nasıl Kullanılır:
+
+Katmanların Açıklamaları:
+
+[ProjeAdı].Domain/ (Domain Katmanı):
+
+Uygulamanın iş mantığını ve temel kurallarını içerir. Diğer katmanlardan bağımsızdır.
+Entities/: İş nesnelerini (varlıkları) tanımlar. Veritabanı tablolarıyla doğrudan ilişkili olabilir.
+Interfaces/: Domain katmanındaki servisler veya repolar için arayüz tanımlarını içerir (eğer uygulama katmanı domain katmanına bağımlı olacaksa).
+Enums/: Uygulama genelinde kullanılan sabit değerleri tanımlar.
+ValueObjects/: Değer nesnelerini (kimliği olmayan, sadece değerleriyle tanımlanan nesneler) tanımlar.
+Events/: Domain olaylarını tanımlar. Bir varlığın durumundaki önemli değişiklikleri temsil eder.
+[ProjeAdı].Application/ (Uygulama Katmanı):
+
+Domain katmanındaki iş mantığını kullanarak belirli kullanım durumlarını (use cases) veya özellikleri gerçekleştirir. Genellikle Domain katmanına bağımlıdır.
+Common/: Önceki yanıtta detaylandırılmıştı (Interfaces, Behaviors, Exceptions, Mappings). Mappings/ genellikle AutoMapper gibi kütüphaneler için profil tanımlarını içerir.
+Features/: Önceki yanıtta detaylandırılmıştı (belirli işlevselliklere ait Commands, Queries, DTOs).
+Contracts/ (Opsiyonel): Uygulama katmanının dış katmanlara (Infrastructure gibi) ihtiyaç duyduğu soyutlamaları (arayüzleri) tanımlar. Bu, bağımlılıkların ters çevrilmesine yardımcı olur.
+[ProjeAdı].Infrastructure/ (Altyapı Katmanı):
+
+Uygulamanın dış dünya ile etkileşimini yönetir (veritabanı erişimi, dosya sistemleri, harici servisler vb.). Uygulama katmanındaki arayüzlerin somut implementasyonlarını içerir.
+Persistence/: Veritabanı ile ilgili işlemleri yönetir.
+DataContext.cs: Entity Framework Core gibi ORM'ler kullanılıyorsa, veritabanı bağlam sınıfını içerir.
+Repositories/: Veritabanı erişimini soyutlayan repository pattern implementasyonlarını içerir. Genellikle uygulama katmanındaki Contracts/ klasöründeki arayüzleri implemente eder.
+Migrations/: Veritabanı şema değişikliklerini yönetmek için kullanılan migration dosyalarını içerir.
+Services/: E-posta gönderme, dosya yükleme/indirme gibi dış servislerle etkileşim kuran servislerin implementasyonlarını içerir. Uygulama katmanındaki Contracts/ klasöründeki arayüzleri implemente edebilir.
+Configurations/: Altyapı katmanına özgü konfigürasyonları (veritabanı bağlantı stringleri, harici servis ayarları vb.) yönetir.
+[ProjeAdı].Api/ (API Katmanı):
+
+Uygulamayı dış dünyaya (istemcilere) sunan arayüzü (genellikle bir RESTful API) içerir. Uygulama katmanındaki işlevselliği kullanır.
+Controllers/: Gelen HTTP isteklerini karşılayan ve uygulama katmanındaki komutları/sorguları tetikleyen sınıfları içerir.
+Models/: API'ye özgü istek ve cevap veri yapılarını (view modelleri) tanımlar. Genellikle uygulama katmanındaki DTO'lardan farklı olabilirler.
+Middlewares/: HTTP istek/cevap işleme pipeline'ına özel mantık eklemek için kullanılan middleware sınıflarını içerir (örneğin, logging, hata işleme).
+Filters/: Kontrolcü eylemlerine özel davranışlar eklemek için kullanılan filtreleri içerir (örneğin, doğrulama, yetkilendirme).
+Extensions/: Servis koleksiyonuna özel servis kaydı veya diğer konfigürasyonları eklemek için kullanılan extension metotlarını içerir.
+Program.cs: Uygulamanın başlangıç noktasını ve temel konfigürasyonunu içerir.
+tests/ (Test Katmanı):
+
+Her katmanın ayrı ayrı testlerini içeren proje klasörlerini barındırır.
+[ProjeAdı].Domain.Tests/: Domain katmanındaki iş mantığının birim testlerini içerir.
+[ProjeAdı].Application.Tests/: Uygulama katmanındaki kullanım durumlarının ve iş akışlarının birim ve entegrasyon testlerini içerir.
+[ProjeAdı].Infrastructure.Tests/: Altyapı katmanındaki bileşenlerin (veritabanı erişimi, harici servis entegrasyonları vb.) entegrasyon testlerini içerir.
+Diğer Klasörler:
+
+docs/: Proje dokümantasyonunu içerir.
+deployments/: Uygulamanın farklı ortamlara (geliştirme, test, üretim) dağıtımına yönelik scriptler veya konfigürasyon dosyalarını içerir.
+artifacts/: Derleme çıktıları, yayın paketleri gibi üretilen dosyaları içerir.
+Genel Notlar:
+
+[ProjeAdı] yerine projenizin genel adını kullanın.
+Bu yapı, katmanlı mimariyi benimseyen projeler için iyi bir başlangıç noktasıdır.
+Projenizin büyüklüğüne ve karmaşıklığına göre bu yapıyı daha da detaylandırabilir veya basitleştirebilirsiniz.
+Her katmanın kendi sorumlulukları olmalı ve diğer katmanlara olan bağımlılıkları dikkatli bir şekilde yönetilmelidir. Genellikle bağımlılıklar yukarı doğru olmalıdır (örneğin, API -> Application -> Domain). Infrastructure katmanı genellikle Application katmanındaki arayüzlere bağımlı olur (Dependency Inversion Principle).
